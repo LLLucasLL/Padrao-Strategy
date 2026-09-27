@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Descrição da aplicação -->
+    <meta
+        name="description"
+        content="Calculadora de desconto utilizando o padrão de projeto Strategy."
+    >
+
+    <title>Strategy - Calculadora de Desconto</title>
+
+    <!-- Arquivo CSS separado do HTML -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <!--
+        =====================================================================
+        CAMADA 0 - FUNDO ANIMADO
+        =====================================================================
+
+        Esta div contém apenas elementos visuais.
+
+        O:
+            z-index: 0
+
+        definido no CSS mantém essas animações atrás da aplicação.
+
+        pointer-events: none
+
+        faz com que essas animações não atrapalhem cliques,
+        seleção de campos ou qualquer interação do usuário.
+    -->
+    <div class="background-effects" aria-hidden="true">
+
+        <!-- Primeira luz púrpura -->
+        <span class="orb orb-one"></span>
+
+        <!-- Segunda luz púrpura -->
+        <span class="orb orb-two"></span>
+
+        <!-- Terceira luz púrpura -->
+        <span class="orb orb-three"></span>
+
+    </div>
+
+        <div class="card-titulo">
+            <!-- Título principal -->
+            <h1>CALCULADORA</br> DE DESCONTO</h1>
+        </div>
+    <!--
+        =====================================================================
+        CAMADA 10 - CONTEÚDO PRINCIPAL
+        =====================================================================
+
+        O conteúdo recebe z-index maior que o fundo.
+
+        Portanto:
+
+            Fundo     → z-index: 0
+            Interface → z-index: 10
+
+        Dessa forma o conteúdo permanece sempre na frente.
+    -->
+    <main class="container">
+
+        <section class="card">
+
+
+
+
+
+            <!--
+                =============================================================
+                FORMULÁRIO
+                =============================================================
+            -->
+            <form id="form-desconto">
+
+                <!-- Seleção da estratégia -->
+                <label for="tipo">
+                    Tipo de cliente / desconto
+                </label>
+
+                <select id="tipo" name="tipo" required>
+
+                    <option value="">
+                        Selecione uma estratégia
+                    </option>
+
+                    <option value="COMUM">
+                        Comum — 5%
+                    </option>
+
+                    <option value="VIP">
+                        VIP — 10%
+                    </option>
+
+                    <option value="PREMIUM">
+                        Premium — 20%
+                    </option>
+
+                    <option value="ANIVERSARIO">
+                        Aniversário — 15%
+                    </option>
+
+                    <option value="PROMOCIONAL">
+                        Promocional — 25%
+                    </option>
+
+                    <option value="FUNCIONARIO">
+                        Funcionário — 30%
+                    </option>
+
+                </select>
+
+
+                <!-- Campo para informar o valor -->
+                <label for="valor">
+                    Valor da compra
+                </label>
+
+                <input
+                    id="valor"
+                    name="valor"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="100.00"
+                    required
+                >
+
+
+                <!-- Botão de cálculo -->
+                <button type="submit">
+                    Calcular desconto
+                </button>
+
+            </form>
+
+
+            <!--
+                Área utilizada para mensagens de erro.
+                Inicialmente fica escondida.
+            -->
+            <div
+                id="mensagem"
+                class="mensagem"
+                hidden
+            ></div>
+
+
+            <!--
+                =============================================================
+                RESULTADO
+                =============================================================
+
+                Também começa escondido.
+
+                O JavaScript irá remover o atributo "hidden"
+                quando existir um resultado.
+            -->
+            <div
+                id="resultado"
+                class="resultado"
+                hidden
+            >
+
+                <p>
+                    <strong>Estratégia:</strong>
+                    <span id="resultado-tipo"></span>
+                </p>
+
+                <p>
+                    <strong>Valor original:</strong>
+                    R$
+                    <span id="resultado-original"></span>
+                </p>
+
+                <p>
+                    <strong>Valor final:</strong>
+                    R$
+                    <span id="resultado-final"></span>
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- JavaScript da aplicação -->
+    <script src="/js/script.js"></script>
+
+</body>
+</html>

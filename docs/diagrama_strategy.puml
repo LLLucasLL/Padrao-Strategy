@@ -1,0 +1,44 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface DescontoStrategy {
+    + calcular(valor: float): float
+}
+
+class DescontoComum {
+    + calcular(valor: float): float
+}
+
+class DescontoVIP {
+    + calcular(valor: float): float
+}
+
+class DescontoPremium {
+    + calcular(valor: float): float
+}
+
+class DescontoAniversario {
+    + calcular(valor: float): float
+}
+
+class DescontoPromocional {
+    + calcular(valor: float): float
+}
+
+class DescontoFuncionario {
+    + calcular(valor: float): float
+}
+
+class CalculadoraDesconto {
+    - strategy: DescontoStrategy
+    + calcular(valor: float): float
+}
+
+DescontoComum ..|> DescontoStrategy
+DescontoVIP ..|> DescontoStrategy
+DescontoPremium ..|> DescontoStrategy
+DescontoAniversario ..|> DescontoStrategy
+DescontoPromocional ..|> DescontoStrategy
+DescontoFuncionario ..|> DescontoStrategy
+CalculadoraDesconto --> DescontoStrategy
+@enduml

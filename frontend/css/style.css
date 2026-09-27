@@ -1,0 +1,1390 @@
+:root {
+    /* Fundo principal */
+    --fundo: #270202;
+    --fundo-secundario: #120000;
+
+    /* Vermelhos principais */
+    --vermelho-escuro: #4a0505;
+    --vermelho: #8b0000;
+    --vermelho-vivo: #dc2626;
+    --vermelho-claro: #ef4444;
+    --vermelho-neon: #ff4d4d;
+
+    /* Texto */
+    --texto: #fff5f5;
+    --texto-suave: #e8caca;
+
+    /* Campos */
+    --campo: rgba(48, 6, 6, 0.82);
+
+    /* Bordas */
+    --borda: rgba(239, 68, 68, 0.24);
+
+    /* Estados */
+    --sucesso: #c7f9d4;
+    --erro: #ffd0d0;
+}
+
+
+/* ==========================================================================
+   CONFIGURAÇÕES GERAIS
+   ========================================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html {
+    min-height: 100%;
+
+    /* Rolagem suave */
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    /*
+        position relative permite posicionar elementos
+        relacionados ao corpo da página.
+    */
+    position: relative;
+
+    /*
+        isolation cria um novo contexto de empilhamento.
+        Isso facilita o controle do z-index.
+    */
+    isolation: isolate;
+
+    /*
+        Impede que as luzes animadas criem barra horizontal.
+    */
+    overflow-x: hidden;
+
+    min-height: 100vh;
+
+    margin: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 32px 16px;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: var(--texto);
+
+    /*
+        Fundo base #270202.
+        Foram adicionados gradientes para dar profundidade.
+    */
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(91, 27, 108, 0.18),
+            transparent 35%
+        ),
+        linear-gradient(
+            145deg,
+            #270202 0%,
+            #160003 48%,
+            #0d0001 100%
+        );
+}
+
+
+/* ==========================================================================
+   FUNDO ANIMADO
+   ==========================================================================
+
+   Este bloco é responsável pelo efeito púrpura.
+
+   Ele fica em:
+
+       z-index: 0
+
+   enquanto a interface fica em:
+
+       z-index: 10
+
+   ========================================================================== */
+
+
+.background-effects {
+
+    position: fixed;
+
+    /*
+        Ocupa toda a tela.
+    */
+    inset: 0;
+
+    /*
+        Fica atrás da interface.
+    */
+    z-index: 0;
+
+    /*
+        Esconde qualquer parte da animação
+        que ultrapasse a tela.
+    */
+    overflow: hidden;
+
+    /*
+        IMPORTANTE:
+
+        As animações não podem impedir
+        o usuário de clicar na interface.
+    */
+    pointer-events: none;
+}
+
+
+/* ==========================================================================
+   CAMADA DE LUZ PRINCIPAL DO FUNDO
+   ========================================================================== */
+
+.background-effects::before {
+    content: '';
+
+    position: absolute;
+    inset: -20%;
+
+    background:
+        radial-gradient(
+            circle at 20% 25%,
+            rgba(220, 38, 38, 0.30),
+            transparent 24%
+        ),
+
+        radial-gradient(
+            circle at 80% 15%,
+            rgba(239, 68, 68, 0.20),
+            transparent 22%
+        ),
+
+        radial-gradient(
+            circle at 70% 80%,
+            rgba(127, 29, 29, 0.30),
+            transparent 27%
+        );
+
+    filter: blur(45px);
+
+    animation:
+        background-drift
+        18s
+        ease-in-out
+        infinite
+        alternate;
+}
+
+
+/* ==========================================================================
+   EFEITO DE GRADE
+   ========================================================================== */
+
+.background-effects::after {
+
+    content: '';
+
+    position: absolute;
+
+    inset: 0;
+
+    /*
+        Cria linhas horizontais e verticais
+        extremamente discretas.
+    */
+    background:
+
+        linear-gradient(
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+        );
+
+    background-size: 42px 42px;
+
+    /*
+        Faz a grade aparecer mais
+        no centro da tela.
+    */
+    mask-image:
+        radial-gradient(
+            circle at center,
+            black 20%,
+            transparent 90%
+        );
+
+    opacity: 0.22;
+}
+
+
+/* ==========================================================================
+   ORBS
+   ========================================================================== */
+
+.orb {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    /*
+        Suaviza a luz.
+    */
+    filter: blur(8px);
+
+    opacity: 0.55;
+
+    /*
+        Mistura a luz com o fundo.
+    */
+    mix-blend-mode: screen;
+
+    /*
+        Informa ao navegador que
+        transform será animado.
+    */
+    will-change: transform;
+}
+
+
+.orb-one {
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            rgba(255, 77, 77, 0.85),
+            rgba(139, 0, 0, 0.30) 45%,
+            transparent 70%
+        );
+}
+
+.orb-two {
+    background:
+        radial-gradient(
+            circle at 45% 45%,
+            rgba(220, 38, 38, 0.65),
+            rgba(127, 29, 29, 0.25) 48%,
+            transparent 72%
+        );
+}
+
+.orb-three {
+    background:
+        radial-gradient(
+            circle,
+            rgba(239, 68, 68, 0.50),
+            transparent 68%
+        );
+}
+
+
+/* ==========================================================================
+   ANIMAÇÕES DO FUNDO
+   ========================================================================== */
+
+
+/*
+    Movimento da iluminação geral.
+*/
+
+@keyframes background-drift {
+
+    from {
+
+        transform:
+            translate3d(-2%, -1%, 0)
+            scale(1);
+    }
+
+    to {
+
+        transform:
+            translate3d(3%, 2%, 0)
+            scale(1.08);
+    }
+}
+
+
+/*
+    Movimento da primeira luz.
+*/
+
+@keyframes orb-one {
+
+    from {
+
+        transform:
+            translate3d(0, 0, 0)
+            rotate(0deg);
+    }
+
+    to {
+
+        transform:
+            translate3d(13vw, 11vh, 0)
+            rotate(18deg);
+    }
+}
+
+
+/*
+    Movimento da segunda luz.
+*/
+
+@keyframes orb-two {
+
+    from {
+
+        transform:
+            translate3d(0, 0, 0)
+            scale(1);
+    }
+
+    to {
+
+        transform:
+            translate3d(-12vw, -10vh, 0)
+            scale(1.13);
+    }
+}
+
+
+/*
+    Movimento da terceira luz.
+*/
+
+@keyframes orb-three {
+
+    from {
+
+        transform:
+            translate3d(-20px, 10px, 0)
+            scale(0.85);
+    }
+
+    to {
+
+        transform:
+            translate3d(70px, -60px, 0)
+            scale(1.15);
+    }
+}
+
+
+/* ==========================================================================
+   CONTAINER PRINCIPAL
+   ========================================================================== */
+
+
+/*
+    Aqui começa o conteúdo real.
+
+    z-index 10 significa que:
+    
+    conteúdo = frente
+    fundo    = atrás
+*/
+
+.container {
+
+    position: relative;
+
+    z-index: 10;
+
+    width: min(100%, 620px);
+
+    perspective: 1000px;
+}
+
+
+/* ==========================================================================
+   CARD
+   ========================================================================== */
+
+.card-titulo {
+    position: relative;
+    overflow: hidden;
+
+    padding: clamp(
+        28px,
+        6vw,
+        46px
+    );
+
+    text-align: left;
+
+    /* Impede o título de ocupar toda a largura */
+    max-width: 600px;
+
+    /* Espaçamento da direita */
+    padding-right: 100px;
+}
+
+.card-titulo h1,
+.card-titulo h2,
+.card-titulo h3 {
+    text-align: left;
+
+    /* Faz o texto quebrar antes de chegar ao lado direito */
+    max-width: 450px;
+}
+
+
+.card {
+
+    position: relative;
+
+    /*
+        Esconde partes do brilho
+        que ultrapassarem o card.
+    */
+    overflow: hidden;
+
+    padding: clamp(
+        28px,
+        6vw,
+        46px
+    );
+
+    border: 1px solid rgba(239, 68, 68, 0.22);
+
+    border-radius: 26px;
+
+
+    /*
+        Efeito de vidro.
+    */
+    background:
+        linear-gradient(
+            145deg,
+            rgba(43, 7, 7, 0.94),
+            rgba(15, 0, 0, 0.88)
+        );
+
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.55),
+        0 0 45px rgba(220, 38, 38, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    /*
+        Faz o fundo animado aparecer
+        suavemente através do card.
+    */
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+
+    /*
+        Animação de entrada.
+    */
+    animation:
+
+        card-in
+        0.9s
+        cubic-bezier(0.2, 0.7, 0.2, 1)
+        both;
+}
+
+
+/* ==========================================================================
+   BRILHO NO TOPO DO CARD
+   ========================================================================== */
+
+.card::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: -30%;
+
+    width: 60%;
+
+    height: 1px;
+
+
+    /*
+        Linha brilhante púrpura.
+    */
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(97, 12, 12, 0.4),
+            transparent
+        );
+
+
+    animation:
+        shine
+        5s
+        ease-in-out
+        infinite;
+}
+
+
+/* ==========================================================================
+   LUZ INTERNA DO CARD
+   ========================================================================== */
+
+.card::after {
+
+    content: '';
+
+    position: absolute;
+
+    top: -150px;
+
+    right: -140px;
+
+    width: 260px;
+
+    height: 260px;
+
+    border-radius: 50%;
+
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(247, 85, 85, 0.15),
+            transparent 68%
+        );
+
+
+    /*
+        Evita interferência com os elementos.
+    */
+    pointer-events: none;
+}
+
+
+/* ==========================================================================
+   ANIMAÇÃO DE ENTRADA DO CARD
+   ========================================================================== */
+
+@keyframes card-in {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(28px)
+            scale(0.97)
+            rotateX(4deg);
+    }
+
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1)
+            rotateX(0);
+    }
+}
+
+
+/* ==========================================================================
+   ANIMAÇÃO DO BRILHO
+   ========================================================================== */
+
+@keyframes shine {
+
+    0%,
+    55%,
+    100% {
+
+        transform:
+            translateX(0);
+
+        opacity: 0;
+    }
+
+
+    20% {
+
+        opacity: 1;
+    }
+
+
+    45% {
+
+        transform:
+            translateX(280%);
+
+        opacity: 0.8;
+    }
+}
+
+
+/* ==========================================================================
+   TÍTULO
+   ========================================================================== */
+
+h1 {
+
+    position: relative;
+
+    z-index: 2;
+
+    margin: 0;
+
+    font-size:
+        clamp(
+            2rem,
+            6vw,
+            3rem
+        );
+
+
+    line-height: 1.05;
+
+
+    letter-spacing:
+        -0.04em;
+
+
+    /*
+        Gradiente no texto.
+    */
+    background:
+
+        linear-gradient(
+            100deg,
+            #ffffff 10%,
+            #ff7b7b 48%,
+            #ffffff 82%
+        );
+
+
+    background-size: 220% auto;
+
+
+    /*
+        Recorta o gradiente dentro do texto.
+    */
+    -webkit-background-clip: text;
+
+    background-clip: text;
+
+    color: transparent;
+
+
+    /*
+        Duas animações:
+
+        1. entrada
+        2. brilho contínuo
+    */
+    animation:
+
+        text-in
+        0.85s
+        0.15s
+        cubic-bezier(0.2, 0.7, 0.2, 1)
+        both,
+
+        text-shimmer
+        6s
+        ease-in-out
+        infinite;
+}
+
+
+/* ==========================================================================
+   SUBTÍTULO
+   ========================================================================== */
+
+.subtitle {
+
+    position: relative;
+
+    z-index: 2;
+
+    margin:
+        12px 0 0;
+
+    color:
+        var(--texto-suave);
+
+    line-height: 1.6;
+
+
+    animation:
+
+        text-in
+        0.8s
+        0.28s
+        cubic-bezier(0.2, 0.7, 0.2, 1)
+        both;
+}
+
+
+/* ==========================================================================
+   ANIMAÇÃO DOS TEXTOS
+   ========================================================================== */
+
+@keyframes text-in {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(14px);
+
+        filter:
+            blur(5px);
+    }
+
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+        filter:
+            blur(0);
+    }
+}
+
+
+/* ==========================================================================
+   BRILHO DO TÍTULO
+   ========================================================================== */
+
+@keyframes text-shimmer {
+
+    0%,
+    30% {
+
+        background-position:
+            0% 50%;
+    }
+
+
+    70%,
+    100% {
+
+        background-position:
+            100% 50%;
+    }
+}
+
+
+/* ==========================================================================
+   FORMULÁRIO
+   ========================================================================== */
+
+form {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 30px;
+
+
+    animation:
+
+        text-in
+        0.9s
+        0.4s
+        cubic-bezier(0.2, 0.7, 0.2, 1)
+        both;
+}
+
+
+/* ==========================================================================
+   LABELS
+   ========================================================================== */
+
+label {
+
+    margin-top: 12px;
+
+    font-size: 0.92rem;
+
+    font-weight: 700;
+
+    color: #f5eaff;
+
+
+    /*
+        Animações leves ao focar.
+    */
+    transition:
+
+        color 0.25s ease,
+
+        transform 0.25s ease;
+}
+
+
+/*
+    Quando qualquer campo dentro do formulário
+    estiver selecionado, as labels mudam.
+*/
+
+form:focus-within label {
+
+    color:
+        rgba(97, 12, 12, 0.4);
+
+    transform:
+        translateX(4px);
+}
+
+
+/* ==========================================================================
+   INPUTS, SELECT E BOTÃO
+   ========================================================================== */
+
+input,
+select,
+button {
+
+    width: 100%;
+
+    min-height: 52px;
+
+    padding:
+        14px 16px;
+
+    border-radius: 13px;
+
+    font: inherit;
+
+
+    /*
+        Transições suaves.
+    */
+    transition:
+
+        transform 0.25s ease,
+
+        border-color 0.25s ease,
+
+        box-shadow 0.25s ease,
+
+        background 0.25s ease;
+}
+
+
+/* ==========================================================================
+   INPUTS E SELECT
+   ========================================================================== */
+
+input,
+select {
+
+    border:
+        1px solid
+        rgba(205, 106, 106, 0.16);
+
+
+    outline: none;
+
+    color: #ffffff;
+
+    background:
+         rgba(45, 5, 5, 0.84);
+
+
+    box-shadow:
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.03);
+}
+
+
+/* ==========================================================================
+   PLACEHOLDER
+   ========================================================================== */
+
+input::placeholder {
+
+    color:
+        rgba(240, 213, 213, 0.42);
+}
+
+
+/* ==========================================================================
+   OPÇÕES DO SELECT
+   ========================================================================== */
+
+select option {
+
+    color: #ffffff;
+
+    background:
+        #261010;
+}
+
+
+/* ==========================================================================
+   HOVER DOS CAMPOS
+   ========================================================================== */
+
+input:hover,
+select:hover {
+
+    border-color:
+        rgba(244, 32, 32, 0.45);
+
+
+    background:
+        rgba(86, 13, 13, 0.88);
+}
+
+
+/* ==========================================================================
+   FOCO NOS CAMPOS
+   ========================================================================== */
+
+input:focus,
+select:focus {
+
+    border-color:
+        rgba(97, 12, 12, 0.4);
+
+
+    /*
+        Pequeno deslocamento para cima.
+    */
+    transform:
+        translateY(-2px);
+
+
+    /*
+        Glow púrpura.
+    */
+    box-shadow:
+
+        0 0 0 4px
+        rgba(247, 85, 85, 0.12),
+
+        0 10px 25px
+        rgba(237, 58, 58, 0.14);
+}
+
+
+/* ==========================================================================
+   BOTÃO
+   ========================================================================== */
+
+button {
+
+    position: relative;
+
+    /*
+        Cria um novo contexto de empilhamento
+        para o efeito de brilho.
+    */
+    isolation: isolate;
+
+    overflow: hidden;
+
+    margin-top: 16px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    color: white;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+
+    /*
+        Gradiente púrpura.
+    */
+    background:
+
+        linear-gradient(
+            100deg,
+            #7f1d1d,
+            #b91c1c,
+            #ef4444
+        );
+
+
+    /*
+        Tamanho maior para permitir
+        animação do gradiente.
+    */
+    background-size:
+        200% 100%;
+
+
+    box-shadow:
+
+        0 12px 28px
+        rgba(237, 58, 58, 0.28);
+
+
+    animation:
+
+        button-gradient
+        5s
+        ease
+        infinite;
+}
+
+
+/* ==========================================================================
+   BRILHO QUE PASSA PELO BOTÃO
+   ========================================================================== */
+
+button::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: -30%;
+
+    width: 25%;
+
+    height: 100%;
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.32),
+            transparent
+        );
+
+
+    transform:
+        skewX(-20deg);
+
+
+    transition:
+        left 0.5s ease;
+
+
+    /*
+        Mantém esse brilho dentro
+        do contexto do botão.
+    */
+    z-index: -1;
+}
+
+
+/* ==========================================================================
+   HOVER DO BOTÃO
+   ========================================================================== */
+
+button:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.01);
+
+
+    box-shadow:
+
+        0 18px 35px
+        rgba(237, 58, 58, 0.38);
+}
+
+
+/*
+    Move o brilho quando o mouse
+    passa pelo botão.
+*/
+
+button:hover::before {
+
+    left: 120%;
+}
+
+
+/* ==========================================================================
+   CLIQUE DO BOTÃO
+   ========================================================================== */
+
+button:active {
+
+    transform:
+        translateY(0)
+        scale(0.99);
+}
+
+
+/* ==========================================================================
+   ANIMAÇÃO DO GRADIENTE DO BOTÃO
+   ========================================================================== */
+
+@keyframes button-gradient {
+
+    0%,
+    100% {
+
+        background-position:
+            0% 50%;
+    }
+
+
+    50% {
+
+        background-position:
+            100% 50%;
+    }
+}
+
+
+/* ==========================================================================
+   RESULTADO
+   ========================================================================== */
+
+.resultado,
+.mensagem {
+
+    position: relative;
+
+    z-index: 2;
+
+    margin-top: 24px;
+
+    padding:
+        18px 20px;
+
+    border-radius: 15px;
+
+
+    /*
+        Animação quando aparece.
+    */
+    animation:
+
+        result-in
+        0.55s
+        cubic-bezier(0.2, 0.8, 0.2, 1)
+        both;
+}
+
+
+/* ==========================================================================
+   RESULTADO
+   ========================================================================== */
+
+.resultado {
+
+    border:
+        1px solid
+        rgba(248, 62, 62, 0.26);
+
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(91, 19, 19, 0.75),
+            rgba(39, 2, 2, 0.72)
+        );
+
+
+    box-shadow:
+
+        0 12px 35px
+        rgba(0, 0, 0, 0.22);
+}
+
+
+/* ==========================================================================
+   TEXTO DO RESULTADO
+   ========================================================================== */
+
+.resultado p {
+
+    margin:
+        7px 0;
+
+    color:
+        #eee1f7;
+}
+
+
+/* ==========================================================================
+   VALORES DESTACADOS
+   ========================================================================== */
+
+.resultado strong {
+
+    color:
+        #da4b4b;
+}
+
+
+/* ==========================================================================
+   MENSAGEM DE ERRO
+   ========================================================================== */
+
+.mensagem {
+
+    border:
+        1px solid
+        rgba(248, 113, 113, 0.25);
+
+    color:
+        var(--erro);
+
+    background:
+        rgba(97, 12, 12, 0.4);
+}
+
+
+/* ==========================================================================
+   ANIMAÇÃO DO RESULTADO
+   ========================================================================== */
+
+@keyframes result-in {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(14px)
+            scale(0.98);
+    }
+
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* ==========================================================================
+   HIDDEN
+   ========================================================================== */
+
+[hidden] {
+
+    display: none !important;
+}
+
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+
+    body {
+
+        padding:
+            18px 12px;
+    }
+
+
+    .card {
+
+        padding:
+            26px 20px;
+
+        border-radius:
+            20px;
+    }
+
+
+    /*
+        Reduz o tamanho das luzes
+        em telas menores.
+    */
+
+    .orb-one {
+
+        width:
+            18rem;
+
+        height:
+            18rem;
+    }
+
+
+    .orb-two {
+
+        width:
+            21rem;
+
+        height:
+            21rem;
+    }
+}
+
+
+/* ==========================================================================
+   ACESSIBILIDADE
+   ==========================================================================
+
+   Alguns usuários configuram o sistema operacional
+   para reduzir movimentos.
+
+   Neste caso as animações são praticamente desativadas.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        scroll-behavior:
+            auto !important;
+
+
+        animation-duration:
+            0.01ms !important;
+
+
+        animation-iteration-count:
+            1 !important;
+
+
+        transition-duration:
+            0.01ms !important;
+    }
+}
